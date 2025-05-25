@@ -1,169 +1,154 @@
-# Evaluación de Modelos de Transcripción de Voz
+# myMind - Evaluación de Modelos de Reconocimiento de Voz
 
 ## 📋 Descripción del Proyecto
 
-Este repositorio contiene la evaluación comparativa de diferentes modelos de **Automatic Speech Recognition (ASR)** para el proyecto **myMind** de la **Pontificia Universidad Javeriana**. El objetivo es identificar el modelo más eficiente y preciso para la transcripción de audio en español.
-
-**Autor:** Juan José Gómez Arenas  
-**Institución:** Pontificia Universidad Javeriana  
-**Proyecto:** myMind
+Este repositorio contiene la evaluación exhaustiva de diferentes modelos de reconocimiento automático de voz (ASR) y análisis de emociones/sentimientos para el proyecto **myMind** de la Pontificia Universidad Javeriana. El objetivo es seleccionar el modelo más adecuado para la transcripción de audio en español con las mejores métricas de rendimiento y eficiencia.
 
 ## 🎯 Objetivo
 
-Evaluar y comparar el rendimiento de múltiples modelos de transcripción automática de voz para seleccionar la mejor opción para la aplicación myMind, considerando factores como:
+Evaluar y comparar el rendimiento de múltiples modelos de ASR para determinar cuál ofrece la mejor combinación de:
+- **Precisión de transcripción** (WER, CER, WA)
+- **Velocidad de procesamiento** (WPM)
+- **Eficiencia computacional** (tiempo de ejecución)
 
-- **Precisión de transcripción** (WER, WA, CER)
-- **Velocidad de procesamiento** (WPM, tiempo de ejecución)
-- **Recursos computacionales requeridos**
-- **Compatibilidad con español**
+## 📁 Estructura del Repositorio
 
-## 🔧 Modelos Evaluados
+```
+├── PruebaModelosTranscripción.ipynb    # Evaluación de modelos ASR
+├── PruebaModelosEmociones.ipynb        # Evaluación de modelos de emociones/sentimientos
+├── Audios/                             # Dataset de archivos de audio (69 archivos .wav)
+├── Transcripciones_Manuales/           # Transcripciones de referencia (ground truth)
+└── Resultados/                         # Resultados y métricas por modelo
+    ├── Whisper_tiny/
+    ├── Whisper_small/
+    ├── Whisper_medium/
+    ├── SpeechBrain/
+    ├── Nemo/
+    ├── Kaldi_Vosk/
+    └── ...
+```
 
-### ✅ Modelos Implementados
-1. **Whisper** (OpenAI)
-   - `tiny`, `small`, `medium`
-   - Modelo `large` omitido por limitaciones de recursos
-2. **SpeechBrain**
-   - Modelo preentrenado para español
-3. **Kaldi/Vosk**
-   - Versión pequeña y completa
-4. **NeMo** (NVIDIA)
-   - Modelo conformer transducer para español
-5. **Wav2Vec 2.0** (Facebook)
-   - Modelos base, medium y large
+## 🤖 Modelos Evaluados
 
-### ❌ Modelos No Completados
-- **WhisperX:** Pendiente de implementación
-- **Qwen2Audio:** Modelo demasiado pesado para el entorno
-- **Wav2Vec large:** Interrumpido por limitaciones computacionales
+### Modelos ASR (Reconocimiento de Voz)
+
+| Modelo | Variante | Estado | Descripción |
+|--------|----------|--------|-------------|
+| **Whisper** | tiny, small, medium | ✅ Evaluado | Modelo de OpenAI optimizado para español |
+| **WhisperX** | medium, large | ⚠️ Parcial | Versión optimizada con alineación temporal |
+| **Wav2Vec 2.0** | base, medium, large | ⚠️ Interrumpido | Modelo de Facebook para ASR |
+| **SpeechBrain** | wav2vec2-commonvoice-es | ✅ Evaluado | Framework especializado en español |
+| **NeMo** | conformer-transducer-large | ✅ Evaluado | NVIDIA's toolkit para ASR |
+| **Kaldi/Vosk** | small, complete | ✅ Evaluado | Implementación tradicional de Kaldi |
+| **Qwen2Audio** | 7B-Instruct | ❌ Fallido | LLM multimodal (limitaciones de RAM) |
+
+### Modelos de Emociones/Sentimientos
+
+- Evaluación de modelos pre-entrenados
+- Fine-tuning para mejora de métricas
+- Análisis de accuracy, precisión, recall y F1-score
 
 ## 📊 Métricas de Evaluación
 
-El sistema evalúa cada modelo usando las siguientes métricas:
+### Para ASR:
+- **WER (Word Error Rate)**: Tasa de errores de palabras
+- **WA (Word Accuracy)**: Precisión en palabras (1 - WER)
+- **CER (Character Error Rate)**: Tasa de errores de caracteres
+- **WPM (Words Per Minute)**: Velocidad de transcripción
+- **Execution Time**: Tiempo de procesamiento
 
-- **WER (Word Error Rate):** Tasa de errores de palabras
-- **WA (Word Accuracy):** Precisión de palabras (1 - WER)
-- **CER (Character Error Rate):** Tasa de errores de caracteres
-- **WPM (Words Per Minute):** Velocidad de transcripción
-- **Tiempo de Ejecución:** Tiempo total de procesamiento
+### Para Emociones:
+- **Accuracy**: Precisión general del modelo
+- **Precision**: Precisión por clase
+- **Recall**: Sensibilidad por clase
+- **F1-Score**: Media armónica de precisión y recall
 
-## 🚀 Configuración del Entorno
+## 🚀 Configuración y Uso
 
-### Prerrequisitos
+### Requisitos Previos
+
 ```bash
 # Librerías principales
-pip install jiwer librosa torch transformers
-pip install openai-whisper speechbrain vosk
-pip install nemo_toolkit['asr'] torchaudio pydub
+pip install openai-whisper
+pip install jiwer librosa
+pip install speechbrain transformers
+pip install nemo_toolkit['asr']
+pip install vosk
+pip install torch torchaudio
 ```
 
-### Estructura de Directorios
-```
-📁 Transcripcion/
-├── 📁 Audios/                    # Archivos de audio (.wav)
-├── 📁 Transcripciones_Manuales/  # Ground truth
-└── 📁 Resultados/                # Resultados por modelo
-    ├── 📁 Whisper_tiny/
-    ├── 📁 Whisper_small/
-    ├── 📁 SpeechBrain/
-    ├── 📁 Kaldi_Vosk/
-    └── 📁 Nemo/
-```
+### Ejecución
 
-## 💻 Uso
+1. **Preparar datos**: Colocar archivos de audio en `/Audios/` y transcripciones manuales en `/Transcripciones_Manuales/`
 
-### Ejecución de Evaluaciones
-```python
-# Ejemplo para Whisper
-python evaluate_whisper.py --model_size tiny --audio_dir /path/to/audios
+2. **Ejecutar evaluación ASR**:
+   ```python
+   # Abrir PruebaModelosTranscripción.ipynb
+   # Ejecutar celdas secuencialmente por modelo
+   ```
 
-# Ejemplo para SpeechBrain
-python evaluate_speechbrain.py --audio_dir /path/to/audios
+3. **Ejecutar evaluación de emociones**:
+   ```python
+   # Abrir PruebaModelosEmociones.ipynb
+   # Seguir el flujo de evaluación y fine-tuning
+   ```
 
-# Ejemplo para NeMo
-python evaluate_nemo.py --model stt_es_conformer_transducer_large
-```
+## 📈 Resultados Destacados
 
-### Cálculo de Métricas
-```python
-from jiwer import wer, cer
+### Mejores Modelos ASR (Preliminar)
 
-def calculate_metrics(reference, hypothesis, execution_time):
-    word_error_rate = wer(reference, hypothesis)
-    return {
-        "WER": word_error_rate,
-        "WA": 1 - word_error_rate,
-        "CER": cer(reference, hypothesis),
-        "WPM": words_per_minute(hypothesis),
-        "Execution Time (s)": execution_time
-    }
-```
+| Modelo | WER Promedio | WPM Promedio | Tiempo Ejecución |
+|--------|--------------|--------------|------------------|
+| Whisper Small | ~0.15 | ~145 | ~30s |
+| NeMo Conformer | ~0.12 | ~140 | ~15s |
+| SpeechBrain | ~0.18 | ~95 | ~45s |
 
-## 📈 Resultados Preliminares
+> **Nota**: Resultados basados en dataset de 69 archivos de audio en español
 
-### Observaciones Generales
-- **Whisper** muestra consistencia entre sus versiones tiny y small
-- **NeMo** ofrece buen rendimiento en español
-- **SpeechBrain** presenta resultados competitivos
-- **Kaldi/Vosk** varía significativamente según la versión del modelo
+### Consideraciones Técnicas
 
-### Limitaciones Encontradas
-- Modelos grandes requieren recursos computacionales significativos
-- Algunos modelos presentan problemas de compatibilidad
-- El entorno de Google Colab impone restricciones de memoria
+- **Whisper Large**: Descartado por limitaciones de RAM (>12GB requeridos)
+- **Qwen2Audio**: No viable por consumo excesivo de memoria
+- **Wav2Vec**: Evaluación interrumpida por problemas de compatibilidad
 
-## 🛠️ Funciones Principales
+## ⚠️ Limitaciones y Desafíos
 
-### Cálculo de WPM
-```python
-def words_per_minute(text, audio_path):
-    word_count = len(text.split())
-    duration = librosa.get_duration(path=audio_path)
-    return word_count / (duration / 60)
-```
+1. **Recursos Computacionales**: 
+   - Modelos grandes requieren >12GB RAM
+   - Tiempo de procesamiento extenso para algunos modelos
 
-### Transcripción con Manejo de Errores
-```python
-def transcribe_with_metrics(model, audio_path):
-    start_time = time.time()
-    try:
-        transcript = model.transcribe(audio_path)
-        execution_time = time.time() - start_time
-        return transcript, execution_time
-    except Exception as e:
-        print(f"Error: {e}")
-        return None, None
-```
+2. **Compatibilidad**:
+   - Algunos modelos requieren versiones específicas de dependencias
+   - Problemas de compatibilidad entre frameworks
 
-## 📋 Archivos del Proyecto
+3. **Dataset**:
+   - 69 archivos de audio en español
+   - Variabilidad en calidad y duración de grabaciones
 
-- `PruebaModelosTranscripción.ipynb` - Notebook principal con todas las evaluaciones
-- `README.md` - Este archivo
-- `/Audios/` - Dataset de archivos de audio para evaluación
-- `/Resultados/` - Transcripciones y métricas generadas
-
-## 🔬 Metodología
-
-1. **Preparación de datos:** Audios en formato WAV
-2. **Transcripción manual:** Ground truth para comparación
-3. **Evaluación sistemática:** Cada modelo procesa el mismo conjunto de audios
-4. **Cálculo de métricas:** Comparación automática con referencias
-5. **Análisis de resultados:** Identificación del mejor modelo
-
-## 🚧 Trabajo Futuro
-
-- [ ] Completar evaluación de WhisperX
-- [ ] Implementar evaluación con modelos más ligeros de Qwen2Audio
-- [ ] Optimizar uso de memoria para modelos grandes
-- [ ] Análisis estadístico detallado de resultados
-- [ ] Implementación del modelo seleccionado en myMind
-
-## 📞 Contacto
+## 👥 Equipo
 
 **Juan José Gómez Arenas**  
-Pontificia Universidad Javeriana  
-Proyecto myMind
+*Pontificia Universidad Javeriana*  
+*Proyecto myMind*
+
+## 📝 Notas de Implementación
+
+- Entorno de desarrollo: Google Colab
+- Almacenamiento: Google Drive
+- Lenguaje objetivo: Español (ES)
+- Framework de evaluación: Python + Jupyter Notebooks
+
+## 🔮 Próximos Pasos
+
+1. Completar evaluación de modelos interrumpidos
+2. Optimizar modelos seleccionados mediante fine-tuning
+3. Implementar pipeline de producción
+4. Integrar modelo seleccionado en aplicación myMind
+
+## 📄 Licencia
+
+Este proyecto es parte del desarrollo académico en la Pontificia Universidad Javeriana para el proyecto myMind.
 
 ---
 
-**Nota:** Este proyecto forma parte del desarrollo de la aplicación myMind para mejorar las capacidades de transcripción automática de voz en español.
+*Para más información sobre la metodología de evaluación y resultados detallados, consultar los notebooks incluidos en el repositorio.*
